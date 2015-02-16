@@ -22,23 +22,73 @@
 #include <strings.h>
 
 #include "util.h"
+#include "vector.h"
 
 struct GumboInternalParser;
 
-GumboAttribute* gumbo_get_attribute(
-    const GumboVector* attributes, const char* name) {
+int gumbo_get_attribute_idx(
+  const GumboVector *attributes, const char *name) {
   for (int i = 0; i < attributes->length; ++i) {
     GumboAttribute* attr = attributes->data[i];
     if (!strcasecmp(attr->name, name)) {
-      return attr;
+      return i;
     }
   }
-  return NULL;
+  return -1;
 }
 
-void gumbo_destroy_attribute(
-    struct GumboInternalParser* parser, GumboAttribute* attribute) {
-  gumbo_parser_deallocate(parser, (void*) attribute->name);
-  gumbo_parser_deallocate(parser, (void*) attribute->value);
-  gumbo_parser_deallocate(parser, (void*) attribute);
+GumboAttribute* gumbo_get_attribute(
+    const GumboVector* attributes, const char* name) {
+  int idx = gumbo_get_attribute_idx(attributes, name);
+  return idx >= 0 ? attributes->data[idx] : NULL;
+}
+
+void gumbo_attribute_set_value(GumboAttribute *attr, const char *value)
+{
+  gumbo_free((void *)attr->value);
+  attr->value = gumbo_strdup(value);
+  attr->original_value = kGumboEmptyString;
+  attr->value_start = kGumboEmptySourcePosition;
+  attr->value_end = kGumboEmptySourcePosition;
+}
+
+void gumbo_destroy_attribute(GumboAttribute* attribute) {
+  gumbo_free((void*) attribute->name);
+  gumbo_free((void*) attribute->value);
+  gumbo_free((void*) attribute);
+}
+
+void gumbo_element_set_attribute(
+    GumboElement *element, const char *name, const char *value)
+{
+  GumboVector *attributes = &element->attributes;
+  GumboAttribute *attr = gumbo_get_attribute(attributes, name);
+
+  if (!attr) {
+    attr = gumbo_malloc(sizeof(GumboAttribute));
+    attr->value = NULL;
+    attr->attr_namespace = GUMBO_ATTR_NAMESPACE_NONE;
+
+    attr->name = gumbo_strdup(name);
+    attr->original_name = kGumboEmptyString;
+    attr->name_start = kGumboEmptySourcePosition;
+    attr->name_end = kGumboEmptySourcePosition;
+
+    gumbo_vector_add(attr, attributes);
+  }
+
+  gumbo_attribute_set_value(attr, value);
+}
+
+void gumbo_element_remove_attribute_at(GumboElement *element, unsigned int pos) {
+  GumboAttribute *attr = element->attributes.data[pos];
+  gumbo_vector_remove_at(pos, &element->attributes);
+  gumbo_destroy_attribute(attr);
+}
+
+void gumbo_element_remove_attribute(GumboElement *element, const char *name) {
+  int idx = gumbo_get_attribute_idx(&element->attributes, name);
+  if (idx >= 0) {
+    gumbo_element_remove_attribute_at(element, idx);
+  }
 }
