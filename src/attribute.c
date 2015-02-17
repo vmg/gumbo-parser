@@ -30,7 +30,7 @@ int gumbo_get_attribute_idx(
   const GumboVector *attributes, const char *name) {
   for (int i = 0; i < attributes->length; ++i) {
     GumboAttribute* attr = attributes->data[i];
-    if (!strcasecmp(attr->name, name)) {
+    if (!gumbo_strcasecmp(attr->name, name)) {
       return i;
     }
   }

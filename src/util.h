@@ -57,6 +57,31 @@ static inline void gumbo_free(void *ptr)
   gumbo_user_free(ptr);
 }
 
+static inline int gumbo_tolower(int c)
+{
+  return c | ((c >= 'A' && c <= 'Z') << 5);
+}
+
+static inline bool gumbo_isalpha(int c)
+{
+  return (c | 0x20) >= 'a' && (c | 0x20) <= 'z';
+}
+
+static inline bool gumbo_isspace(int c)
+{
+  return c == ' ' || c == '\t' || c == 0x0a || c == 0x0c || c == 0x0d;
+}
+
+static inline int gumbo_strcasecmp(const char *a, const char *b)
+{
+  for (;;) {
+    int c1 = gumbo_tolower(*a++);
+    int c2 = gumbo_tolower(*b++);
+    if (!c1 || c1 != c2)
+      return c1 - c2;
+  }
+}
+
 // Debug wrapper for printf, to make it easier to turn off debugging info when
 // required.
 void gumbo_debug(const char* format, ...);

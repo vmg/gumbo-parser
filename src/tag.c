@@ -15,6 +15,7 @@
 // Author: jdtang@google.com (Jonathan Tang)
 
 #include "gumbo.h"
+#include "util.h"
 
 #include <assert.h>
 #include <ctype.h>
@@ -69,8 +70,8 @@ static int
 case_memcmp(const char *s1, const char *s2, unsigned int n)
 {
 	while (n--) {
-		unsigned char c1 = tolower(*s1++);
-		unsigned char c2 = tolower(*s2++);
+		unsigned char c1 = gumbo_tolower(*s1++);
+		unsigned char c2 = gumbo_tolower(*s2++);
 		if (c1 != c2)
 			return (int)c1 - (int)c2;
 	}
