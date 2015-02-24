@@ -610,6 +610,13 @@ typedef struct GumboInternalOutput {
    * reported so we can work out something appropriate for your use-case.
    */
   GumboVector /* GumboError */ errors;
+
+  /**
+   * Element and namespace for the fragment context, if this document
+   * was parsed as a fragment. If not, `fragment_ctx` will be set to `GUMBO_TAG_LAST`
+   */
+  GumboTag fragment_ctx;
+  GumboNamespaceEnum fragment_ns;
 } GumboOutput;
 
 /**

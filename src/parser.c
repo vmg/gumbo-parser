@@ -4101,6 +4101,10 @@ GumboOutput* gumbo_parse_fragment(
     doc_type->system_identifier = gumbo_strdup("");
   }
 
+  // Fill the fragment data on the output
+  parser._output->fragment_ctx = fragment_ctx;
+  parser._output->fragment_ns = fragment_namespace;
+
   parser_state_destroy(&parser);
   gumbo_tokenizer_state_destroy(&parser);
   return parser._output;
