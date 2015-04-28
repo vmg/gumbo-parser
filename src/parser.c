@@ -4011,6 +4011,10 @@ GumboOutput* gumbo_parse_with_options(
   gumbo_tokenizer_state_init(&parser, buffer, length);
   parser_state_init(&parser);
 
+  // Fill the fragment data on the output
+  parser._output->fragment_context = options->fragment_context;
+  parser._output->fragment_namespace = options->fragment_namespace;
+
   if (options->fragment_context != GUMBO_TAG_LAST) {
     fragment_parser_init(
         &parser, options->fragment_context, options->fragment_namespace);

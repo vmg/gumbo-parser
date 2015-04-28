@@ -365,6 +365,8 @@ class Output(ctypes.Structure):
       ('root', _Ptr(Node)),
       # TODO(jdtang): Error type.
       ('errors', Vector),
+      ('fragment_context', Tag),
+      ('fragment_namespace', Namespace)
       ]
 
 @contextlib.contextmanager
