@@ -356,6 +356,7 @@ class Options(ctypes.Structure):
       ('max_errors', ctypes.c_int),
       ('fragment_context', Tag),
       ('fragment_namespace', Namespace),
+      ('max_dom_depth', ctypes.c_uint)
       ]
 
 

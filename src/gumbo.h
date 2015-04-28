@@ -591,6 +591,17 @@ typedef struct GumboInternalOptions {
    * Default: GUMBO_NAMESPACE_HTML
    */
   GumboNamespaceEnum fragment_namespace;
+
+  /**
+   * The maximum number of open elements in the DOM during parsing.
+   * Although parsing is performed iteratively according to the spec,
+   * the resulting DOM tree needs to be traversed recursively by clients.
+   * This traversal can be troublesome and cause stack overflows in
+   * overly nested documents. Hence, a maximum depth of the DOM can be
+   * enforced, after which the document will be truncated.
+   * Default: 0 (unlimited)
+   */
+  unsigned int max_dom_depth;
 } GumboOptions;
 
 /** Default options struct; use this with gumbo_parse_with_options. */

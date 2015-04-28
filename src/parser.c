@@ -58,7 +58,8 @@ const GumboOptions kGumboDefaultOptions = {
   false,
   -1,
   GUMBO_TAG_LAST,
-  GUMBO_NAMESPACE_HTML
+  GUMBO_NAMESPACE_HTML,
+  0,
 };
 
 static const GumboStringPiece kDoctypeHtml = GUMBO_STRING("html");
@@ -4080,6 +4081,10 @@ GumboOutput* gumbo_parse_with_options(
         error->type = GUMBO_ERR_UNACKNOWLEDGED_SELF_CLOSING_TAG;
       }
     }
+
+    if (options->max_dom_depth &&
+        state->_open_elements.length > options->max_dom_depth)
+      break;
 
     ++loop_count;
     assert(loop_count < 1000000000);
