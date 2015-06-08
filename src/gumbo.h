@@ -636,6 +636,12 @@ typedef struct GumboInternalOutput {
    */
   GumboTag fragment_context;
   GumboNamespaceEnum fragment_namespace;
+
+  /**
+   * Flag, set to true if the parsing failed to complete before
+   * timing out
+   */
+  bool timed_out;
 } GumboOutput;
 
 /**
@@ -652,7 +658,8 @@ GumboOutput* gumbo_parse(const char* buffer);
  * buffer, and length.
  */
 GumboOutput* gumbo_parse_with_options(
-    const GumboOptions* options, const char* buffer, size_t buffer_length);
+    const GumboOptions* options, bool *timeout,
+    const char* buffer, size_t buffer_length);
 
 /** Release the memory used for the parse tree & parse errors. */
 void gumbo_destroy_output(GumboOutput* output);
